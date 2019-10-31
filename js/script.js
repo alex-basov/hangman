@@ -60,6 +60,8 @@ const submitBtn = document.querySelector('#submit-btn');
 // choose random word;
 let word = words[Math.floor(Math.random() * words.length)];
 console.log(word);
+let wrongLetters = 0;
+let win;
 
 // answer array
 let answerArray = [];
@@ -68,15 +70,16 @@ for (let i = 0; i < word.length; i++) {
 }
 
 let remainingLetters = word.length;
-
+console.log('remaining letters: ' +  remainingLetters);
 // the game loo
 
 
-while (remainingLetters > 0) {
+while (remainingLetters > 0 && wrongLetters < 2) {
   alert(answerArray.join(' '));
-
   // ask for a letter
   let guess = prompt('Guess a letter or click Cancel button to stop the game');
+  guess = guess.toLowerCase();
+
   if (guess === null) {
     break
   } else if (guess.length !== 1) {
@@ -89,9 +92,19 @@ while (remainingLetters > 0) {
       }
     }
   }
+  if (remainingLetters === 0) {
+    win = true;
+  }
+
+console.log('wrong letters: ' + wrongLetters);
 }
 
+if (win === true) {
 // congrat and show the word
-alert(answerArray.join(' '));
-alert('Great! The word was: ' + word);
+  alert(answerArray.join(' '));
+  alert('Great! The word was: ' + word);
+} else if (win === false){
+  alert('You have lost! The word was: ' + word);
+
+}
 
