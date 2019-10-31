@@ -52,11 +52,46 @@ let words = [
 ];
 
 const wordOutput = document.querySelector('#the-word');
+const remainingLettersOutput = document.querySelector('#remaining-letters');
+const letterInput = document.querySelector('#letter-input');
+const messageOutput = document.querySelector('#message');
+const submitBtn = document.querySelector('#submit-btn');
 
 // choose random word;
 let word = words[Math.floor(Math.random() * words.length)];
-
 console.log(word);
-wordOutput.innerHTML = word;
 
+// answer array
+let answerArray = [];
+for (let i = 0; i < word.length; i++) {
+  answerArray[i] = '_';
+}
+
+let remainingLetters = word.length;
+
+// the game loo
+
+
+while (remainingLetters > 0) {
+  alert(answerArray.join(' '));
+
+  // ask for a letter
+  let guess = prompt('Guess a letter or click Cancel button to stop the game');
+  if (guess === null) {
+    break
+  } else if (guess.length !== 1) {
+    alert('Enter only one letter, please');
+  } else {
+    for (let i = 0; i < word.length; i++) {
+      if (word[i] === guess) {
+        answerArray[i] = guess;
+        remainingLetters--;
+      }
+    }
+  }
+}
+
+// congrat and show the word
+alert(answerArray.join(' '));
+alert('Great! The word was: ' + word);
 
