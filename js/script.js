@@ -61,7 +61,7 @@ const submitBtn = document.querySelector('#submit-btn');
 let word = words[Math.floor(Math.random() * words.length)];
 console.log(word);
 let wrongLetters = 0;
-let win;
+let isWinner;
 
 // answer array
 let answerArray = [];
@@ -70,41 +70,30 @@ for (let i = 0; i < word.length; i++) {
 }
 
 let remainingLetters = word.length;
-console.log('remaining letters: ' +  remainingLetters);
+console.log('remaining letters: ' + remainingLetters);
 // the game loo
 
+submitBtn.onclick = () => {
+  if (remainingLetters <= 0) {
+    messageOutput.innerHTML = 'You have won!';
 
-while (remainingLetters > 0 && wrongLetters < 2) {
-  alert(answerArray.join(' '));
-  // ask for a letter
-  let guess = prompt('Guess a letter or click Cancel button to stop the game');
-  guess = guess.toLowerCase();
-
-  if (guess === null) {
-    break
-  } else if (guess.length !== 1) {
-    alert('Enter only one letter, please');
   } else {
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] === guess) {
-        answerArray[i] = guess;
-        remainingLetters--;
+    wordOutput.innerHTML = answerArray.join(' ');
+    let guess = letterInput.value.toLowerCase().trim();
+    messageOutput.innerHTML = 'Guess a letter or click Cancel button to stop the game';
+    console.log('Guess:' + guess);
+    if (guess === '') {
+      messageOutput.innerHTML = 'enter something?';
+    } else if (guess.length !== 1) {
+      messageOutput.innerHTML = 'Enter only one letter, please';
+    } else {
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] === guess) {
+          answerArray[i] = guess;
+          remainingLetters--;
+          console.log('remaining letters: ' + remainingLetters);
+        }
       }
     }
   }
-  if (remainingLetters === 0) {
-    win = true;
-  }
-
-console.log('wrong letters: ' + wrongLetters);
-}
-
-if (win === true) {
-// congrat and show the word
-  alert(answerArray.join(' '));
-  alert('Great! The word was: ' + word);
-} else if (win === false){
-  alert('You have lost! The word was: ' + word);
-
-}
-
+};
