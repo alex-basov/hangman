@@ -71,29 +71,32 @@ for (let i = 0; i < word.length; i++) {
 
 let remainingLetters = word.length;
 console.log('remaining letters: ' + remainingLetters);
+wordOutput.innerHTML = answerArray.join(' ');
 // the game loo
 
 submitBtn.onclick = () => {
-  if (remainingLetters <= 0) {
-    messageOutput.innerHTML = 'You have won!';
 
+  let guess = letterInput.value.toLowerCase().trim();
+  messageOutput.innerHTML = 'Guess a letter';
+  console.log('Guess:' + guess);
+  if (guess === '') {
+    messageOutput.innerHTML = 'enter something?';
+  } else if (guess.length !== 1) {
+    messageOutput.innerHTML = 'Enter only one letter, please';
   } else {
-    wordOutput.innerHTML = answerArray.join(' ');
-    let guess = letterInput.value.toLowerCase().trim();
-    messageOutput.innerHTML = 'Guess a letter or click Cancel button to stop the game';
-    console.log('Guess:' + guess);
-    if (guess === '') {
-      messageOutput.innerHTML = 'enter something?';
-    } else if (guess.length !== 1) {
-      messageOutput.innerHTML = 'Enter only one letter, please';
-    } else {
-      for (let i = 0; i < word.length; i++) {
-        if (word[i] === guess) {
-          answerArray[i] = guess;
-          remainingLetters--;
-          console.log('remaining letters: ' + remainingLetters);
-        }
+    for (let i = 0; i < word.length; i++) {
+      if (guess === answerArray[i]) {
+        break;
+      } else if (word[i] === guess) {
+        answerArray[i] = guess;
+        wordOutput.innerHTML = answerArray.join(' ');
+        remainingLetters--;
+        letterInput.value = '';
+        console.log('remaining letters: ' + remainingLetters);
       }
+    }
+    if (remainingLetters <= 0) {
+      messageOutput.innerHTML = 'You have won!';
     }
   }
 };
