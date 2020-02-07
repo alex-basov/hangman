@@ -51,8 +51,9 @@ let words = [
   'sea',
 ];
 
+// interface elements
 const wordOutput = document.querySelector('#the-word');
-const remainingLettersOutput = document.querySelector('#remaining-letters');
+const remainingLettersOutput = document.querySelector('#remaining-letters span');
 const letterInput = document.querySelector('#letter-input');
 const messageOutput = document.querySelector('#message');
 const submitBtn = document.querySelector('#submit-btn');
@@ -70,33 +71,31 @@ for (let i = 0; i < word.length; i++) {
 }
 
 let remainingLetters = word.length;
-console.log('remaining letters: ' + remainingLetters);
-wordOutput.innerHTML = answerArray.join(' ');
-// the game loo
+remainingLettersOutput.textContent = remainingLetters;
+wordOutput.textContent = answerArray.join(' ');
 
 submitBtn.onclick = () => {
-
   let guess = letterInput.value.toLowerCase().trim();
-  messageOutput.innerHTML = 'Guess a letter';
+  messageOutput.textContent = 'Guess a letter';
   console.log('Guess:' + guess);
   if (guess === '') {
-    messageOutput.innerHTML = 'enter something?';
+    messageOutput.textContent = 'Please enter something';
   } else if (guess.length !== 1) {
-    messageOutput.innerHTML = 'Enter only one letter, please';
+    messageOutput.textContent = 'Enter only one letter, please';
   } else {
     for (let i = 0; i < word.length; i++) {
       if (guess === answerArray[i]) {
         break;
       } else if (word[i] === guess) {
         answerArray[i] = guess;
-        wordOutput.innerHTML = answerArray.join(' ');
+        wordOutput.textContent = answerArray.join(' ');
         remainingLetters--;
         letterInput.value = '';
-        console.log('remaining letters: ' + remainingLetters);
+        remainingLettersOutput.textContent = remainingLetters;
       }
     }
     if (remainingLetters <= 0) {
-      messageOutput.innerHTML = 'You have won!';
+      messageOutput.textContent = 'You have won!';
     }
   }
 };
