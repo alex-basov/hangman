@@ -71,31 +71,46 @@ for (let i = 0; i < word.length; i++) {
 }
 
 let remainingLetters = word.length;
-remainingLettersOutput.textContent = remainingLetters;
+remainingLettersOutput.textContent = remainingLetters.toString();
 wordOutput.textContent = answerArray.join(' ');
+messageOutput.textContent = 'Guess a letter';
 
 submitBtn.onclick = () => {
   let guess = letterInput.value.toLowerCase().trim();
-  messageOutput.textContent = 'Guess a letter';
+  guess = validateGuess(guess);
   console.log('Guess:' + guess);
-  if (guess === '') {
-    messageOutput.textContent = 'Please enter something';
-  } else if (guess.length !== 1) {
-    messageOutput.textContent = 'Enter only one letter, please';
-  } else {
-    for (let i = 0; i < word.length; i++) {
-      if (guess === answerArray[i]) {
-        break;
-      } else if (word[i] === guess) {
-        answerArray[i] = guess;
-        wordOutput.textContent = answerArray.join(' ');
-        remainingLetters--;
-        letterInput.value = '';
-        remainingLettersOutput.textContent = remainingLetters;
-      }
-    }
-    if (remainingLetters <= 0) {
-      messageOutput.textContent = 'You have won!';
+  if (!guess) return;
+
+  for (let i = 0; i < word.length; i++) {
+    console.log('works');
+    if (guess === answerArray[i]) {
+      break;
+    } else if (word[i] === guess) {
+      answerArray[i] = guess;
+      wordOutput.textContent = answerArray.join(' ');
+      remainingLetters--;
+      letterInput.value = '';
+      remainingLettersOutput.textContent = remainingLetters.toString();
     }
   }
+  checkRemainingLetters(remainingLetters);
 };
+
+function validateGuess(guess) {
+  if (guess === '') {
+    messageOutput.textContent = 'Please enter something';
+    return false;
+  } else if (guess.length !== 1) {
+    messageOutput.textContent = 'Enter only one letter, please';
+    return false;
+  } else {
+    return guess;
+  }
+}
+
+function checkRemainingLetters(remainingLetters) {
+  if (remainingLetters <= 0) {
+    messageOutput.textContent = 'You have won!';
+  }
+}
+
