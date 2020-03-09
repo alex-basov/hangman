@@ -59,14 +59,21 @@ const wrongLettersOutput = document.querySelector('#wrong-letters span');
 const letterInput = document.querySelector('#letter-input');
 const messageOutput = document.querySelector('#message');
 const submitBtn = document.querySelector('#submit-btn');
+const startGameBtn = document.querySelector('#start-game');
+const form = document.querySelector('form');
 
 // choose random word;
 let word = words[Math.floor(Math.random() * words.length)];
 console.log(word);
 let wrongLetters = [];
-let maxWrongAnswers = 5;
+let maxWrongAnswers = 10;
 let wrongAnswersCount = 0;
 let gameOver = false;
+
+form.addEventListener("submit", (e) => {
+ e.preventDefault();
+});
+letterInput.focus();
 
 // answer array
 let answerArray = [];
@@ -91,6 +98,7 @@ submitBtn.onclick = () => {
     wrongAnswersCount = wrongLetters.length;
     wrongAnswersOutput.textContent = wrongAnswersCount.toString();
     console.log('wrong letters: ' + wrongLetters);
+    messageOutput.textContent = `Wrong letter! you've got ${maxWrongAnswers - wrongAnswersCount} more tries`;
   }
 
   for (let i = 0; i < word.length; i++) {
@@ -116,6 +124,7 @@ function validateGuess(guess) {
     return false;
   } else if (guess.length !== 1) {
     messageOutput.textContent = 'Enter only one letter, please';
+    clearInputValues();
     return false;
   } else{
     return guess;
@@ -130,13 +139,19 @@ function checkRemainingLetters(remainingLetters) {
 
 function clearInputValues() {
   letterInput.value = '';
+  letterInput.focus();
 }
 
 function checkMaxWrongAnswers(number) {
   if (wrongAnswersCount >= maxWrongAnswers) {
     messageOutput.textContent = `Too many tries... You've lost`;
     gameOver = true;
-    letterInput.disabled = true;
-    submitBtn.disabled = true;
+    endGame()
   }
+}
+
+function endGame() {
+  startGameBtn.classList.toggle('hidden');
+  letterInput.disabled = true;
+  submitBtn.disabled = true;
 }
