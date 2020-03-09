@@ -1,4 +1,6 @@
-// set the words array
+console.clear();
+
+// words constants
 let words = [
   'minute',
   'ocean',
@@ -51,38 +53,42 @@ let words = [
   'sea',
 ];
 
-// interface elements
+// DOM constants
 const wordOutput = document.querySelector('#the-word');
 const remainingLettersOutput = document.querySelector('#remaining-letters span');
-const wrongAnswersOutput = document.querySelector('#wrong-answers span');
+const wrongAnswersCountOutput = document.querySelector('#wrong-answers span');
 const wrongLettersOutput = document.querySelector('#wrong-letters span');
-const letterInput = document.querySelector('#letter-input');
 const messageOutput = document.querySelector('#message');
+const letterInput = document.querySelector('#letter-input');
 const submitBtn = document.querySelector('#submit-btn');
 const startGameBtn = document.querySelector('#start-game');
 const form = document.querySelector('form');
 
-// choose random word;
-let word = words[Math.floor(Math.random() * words.length)];
-console.log(word);
-let wrongLetters = [];
-let maxWrongAnswers = 10;
-let wrongAnswersCount = 0;
+// Game variables
+let gameStarted = false;
 let gameOver = false;
+let playerWon = false;
+let wordToGuess = words[Math.floor(Math.random() * words.length)];
+console.log(wordToGuess);
+let wrongLetters = [];
+let maxWrongLetters = 10;
+let wrongLettersCount = 0;
+
+letterInput.focus();
+hideElement(startGameBtn);
 
 form.addEventListener("submit", (e) => {
  e.preventDefault();
 });
-letterInput.focus();
 
 // answer array
 let answerArray = [];
 wrongLettersArray = [];
-for (let i = 0; i < word.length; i++) {
+for (let i = 0; i < wordToGuess.length; i++) {
   answerArray[i] = '_';
 }
 
-let remainingLetters = word.length;
+let remainingLetters = wordToGuess.length;
 remainingLettersOutput.textContent = remainingLetters.toString();
 wordOutput.textContent = answerArray.join(' ');
 messageOutput.textContent = 'Guess a letter';
@@ -93,18 +99,18 @@ submitBtn.onclick = () => {
   console.log('Guess:' + guess);
   if (!guess) return;
 
-  if(word.indexOf(guess) === -1 && wrongLetters.indexOf(guess) === -1)  {
+  if(wordToGuess.indexOf(guess) === -1 && wrongLetters.indexOf(guess) === -1)  {
     wrongLetters.push(guess);
-    wrongAnswersCount = wrongLetters.length;
-    wrongAnswersOutput.textContent = wrongAnswersCount.toString();
+    wrongLettersCount = wrongLetters.length;
+    wrongAnswersCountOutput.textContent = wrongLettersCount.toString();
     console.log('wrong letters: ' + wrongLetters);
-    messageOutput.textContent = `Wrong letter! you've got ${maxWrongAnswers - wrongAnswersCount} more tries`;
+    messageOutput.textContent = `Wrong letter! you've got ${maxWrongLetters - wrongLettersCount} more tries`;
   }
 
-  for (let i = 0; i < word.length; i++) {
+  for (let i = 0; i < wordToGuess.length; i++) {
     if (guess === answerArray[i]) {
       break;
-    } else if (word[i] === guess) {
+    } else if (wordToGuess[i] === guess) {
       answerArray[i] = guess;
       wordOutput.textContent = answerArray.join(' ');
       remainingLetters--;
@@ -115,7 +121,7 @@ submitBtn.onclick = () => {
   wrongLettersOutput.textContent = wrongLetters.join(' | ');
   clearInputValues();
   console.log(remainingLetters);
-  checkMaxWrongAnswers(wrongAnswersCount);
+  checkMaxWrongAnswers(wrongLettersCount);
 };
 
 function validateGuess(guess) {
@@ -143,7 +149,7 @@ function clearInputValues() {
 }
 
 function checkMaxWrongAnswers(number) {
-  if (wrongAnswersCount >= maxWrongAnswers) {
+  if (number >= maxWrongLetters) {
     messageOutput.textContent = `Too many tries... You've lost`;
     gameOver = true;
     endGame()
@@ -151,7 +157,15 @@ function checkMaxWrongAnswers(number) {
 }
 
 function endGame() {
-  startGameBtn.classList.toggle('hidden');
+  showElement(startGameBtn);
   letterInput.disabled = true;
   submitBtn.disabled = true;
+}
+
+function hideElement(...elements) {
+  elements.forEach(element => (element.style.display = 'none'));
+}
+
+function showElement(...elements) {
+  elements.forEach(element => (element.style.display = 'unset'));
 }
