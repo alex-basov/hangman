@@ -54,6 +54,8 @@ let words = [
 // interface elements
 const wordOutput = document.querySelector('#the-word');
 const remainingLettersOutput = document.querySelector('#remaining-letters span');
+const wrongAnswersOutput = document.querySelector('#wrong-answers span');
+const wrongLettersOutput = document.querySelector('#wrong-letters span');
 const letterInput = document.querySelector('#letter-input');
 const messageOutput = document.querySelector('#message');
 const submitBtn = document.querySelector('#submit-btn');
@@ -61,11 +63,14 @@ const submitBtn = document.querySelector('#submit-btn');
 // choose random word;
 let word = words[Math.floor(Math.random() * words.length)];
 console.log(word);
-let wrongLetters = 0;
-let isWinner;
+let wrongLetters = [];
+let maxWrongAnswers = 5;
+let wrongAnswersCount = 0;
+let gameOver = false;
 
 // answer array
 let answerArray = [];
+wrongLettersArray = [];
 for (let i = 0; i < word.length; i++) {
   answerArray[i] = '_';
 }
@@ -81,19 +86,28 @@ submitBtn.onclick = () => {
   console.log('Guess:' + guess);
   if (!guess) return;
 
+  if(word.indexOf(guess) === -1 && wrongLetters.indexOf(guess) === -1)  {
+    wrongLetters.push(guess);
+    wrongAnswersCount = wrongLetters.length;
+    wrongAnswersOutput.textContent = wrongAnswersCount.toString();
+    console.log('wrong letters: ' + wrongLetters);
+  }
+
   for (let i = 0; i < word.length; i++) {
-    console.log('works');
     if (guess === answerArray[i]) {
       break;
     } else if (word[i] === guess) {
       answerArray[i] = guess;
       wordOutput.textContent = answerArray.join(' ');
       remainingLetters--;
-      letterInput.value = '';
       remainingLettersOutput.textContent = remainingLetters.toString();
     }
   }
   checkRemainingLetters(remainingLetters);
+  wrongLettersOutput.textContent = wrongLetters.join(' | ');
+  clearInputValues();
+  console.log(remainingLetters);
+  checkMaxWrongAnswers(wrongAnswersCount);
 };
 
 function validateGuess(guess) {
@@ -103,7 +117,7 @@ function validateGuess(guess) {
   } else if (guess.length !== 1) {
     messageOutput.textContent = 'Enter only one letter, please';
     return false;
-  } else {
+  } else{
     return guess;
   }
 }
@@ -114,3 +128,15 @@ function checkRemainingLetters(remainingLetters) {
   }
 }
 
+function clearInputValues() {
+  letterInput.value = '';
+}
+
+function checkMaxWrongAnswers(number) {
+  if (wrongAnswersCount >= maxWrongAnswers) {
+    messageOutput.textContent = `Too many tries... You've lost`;
+    gameOver = true;
+    letterInput.disabled = true;
+    submitBtn.disabled = true;
+  }
+}
